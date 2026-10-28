@@ -21,11 +21,11 @@ The small-field omni was chosen by simplicity among configurations meeting the s
 
 ## Why the families behave differently
 
-- **Compact omni / dipole:** broad angular coverage suits nearby, changing flight directions. Low installation complexity makes this family useful for a small training field.
-- **Collinear:** higher horizontal gain trades against narrower vertical coverage. Altitude and relative station geometry therefore matter.
-- **Fixed panel / Yagi:** useful when the route remains inside the beam. A predefined fixed pointing direction can lose alignment during perimeter search or return legs.
-- **Tracking panel:** follows delayed vehicle directions and provides directional receive gain. This helped the weaker UAV-to-ground direction in the larger tested environments. Tracking error and short freezes are explicitly included.
-- **Crossed UAV antennas:** ideal branch selection can reduce pose-related nulls, but the switching loss and terrain geometry affect the net result. It is not assumed to provide MIMO or combining gain.
+Compact omni / dipole: broad angular coverage suits nearby, changing flight directions. Low installation complexity makes this family useful for a small training field. Collinear: higher horizontal gain trades against narrower vertical coverage. Altitude and relative station geometry therefore matter.
+
+Fixed panel / Yagi: useful when the route remains inside the beam. A predefined fixed pointing direction can lose alignment during perimeter search or return legs. Tracking panel: follows delayed vehicle directions and provides directional receive gain. This helped the weaker UAV-to-ground direction in the larger tested environments. Tracking error and short freezes are explicitly included.
+
+Crossed UAV antennas: ideal branch selection can reduce pose-related nulls, but the switching loss and terrain geometry affect the net result. It is not assumed to provide MIMO or combining gain.
 
 ![Reserve coverage by terrain](antenna-terrain-coverage.png)
 
@@ -37,14 +37,13 @@ Station choices are selected using seeds 0–19 and frozen before evaluation on 
 
 ## Method and assumptions
 
-- Local position/attitude samples come from a completed **Gazebo/PX4 simulation**, not physical flight. Absolute GPS coordinates are excluded.
-- Recorded geometry is transformed for sensitivity studies. Perimeter and out-and-back routes are synthetic.
-- Seven parametric patterns are compared; measured product radiation patterns are not used.
-- Nominal frequency is 868 MHz; peak EIRP is 20 dBm at the station and 10 dBm at the UAV. Receiver sensitivity, cable/installation loss, antenna-gain variation, beamwidth and shadowing vary across shared random samples.
-- A delayed tracking model, 3D dipole-axis pose loss and ideal crossed-antenna branch selection are included. Full polarization coupling, chassis coupling and servo dynamics are omitted.
-- Building/vegetation attenuation is derived from intersections with assumed 12 m rectangular obstacles. Coefficients are declared sensitivity assumptions, not measured material properties.
-- Reserve coverage measures time with at least 10 dB link margin. A scenario passes when all three routes achieve at least 99% reserve coverage, at most 0.1% modeled outage and no continuous outage longer than 3 s. Outage is a signal-threshold result, not actual packet loss.
-- The 180-sample route grid limits temporal resolution. The study does not solve multipath, exact diffraction, interference, modem throughput or video capacity.
+Local position/attitude samples come from a completed **Gazebo/PX4 simulation**, not physical flight. Absolute GPS coordinates are excluded. Recorded geometry is transformed for sensitivity studies. Perimeter and out-and-back routes are synthetic.
+
+Seven parametric patterns are compared; measured product radiation patterns are not used. Nominal frequency is 868 MHz; peak EIRP is 20 dBm at the station and 10 dBm at the UAV. Receiver sensitivity, cable/installation loss, antenna-gain variation, beamwidth and shadowing vary across shared random samples.
+
+A delayed tracking model, 3D dipole-axis pose loss and ideal crossed-antenna branch selection are included. Full polarization coupling, chassis coupling and servo dynamics are omitted. Building/vegetation attenuation is derived from intersections with assumed 12 m rectangular obstacles. Coefficients are declared sensitivity assumptions, not measured material properties.
+
+Reserve coverage measures time with at least 10 dB link margin. A scenario passes when all three routes achieve at least 99% reserve coverage, at most 0.1% modeled outage and no continuous outage longer than 3 s. Outage is a signal-threshold result, not actual packet loss. The 180-sample route grid limits temporal resolution. The study does not solve multipath, exact diffraction, interference, modem throughput or video capacity.
 
 ## Reproduce
 
