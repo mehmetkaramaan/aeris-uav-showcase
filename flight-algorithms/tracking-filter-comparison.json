@@ -1,0 +1,8 @@
+{
+  "experiment": "Synthetic constant-velocity target; seed 42; 8 Hz; 0.3 m independent Gaussian position noise; first 20 samples excluded",
+  "raw_position_rmse_m": 0.4036846578187424,
+  "kalman_position_rmse_m": 0.1622530412328519,
+  "previous_ema_velocity_rmse_m_s": 0.979115756424425,
+  "kalman_velocity_rmse_m_s": 0.167036820177997,
+  "limitation": "Not a Gazebo mission or a guarantee for turning targets, changing LiDAR clusters or association errors."
+}
