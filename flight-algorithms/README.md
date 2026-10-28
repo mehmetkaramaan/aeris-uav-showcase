@@ -19,7 +19,7 @@ This folder publishes the current simulation algorithm source, including the Kal
 | [world_effects.py](world_effects.py) | Separate Gazebo-only scenario placement and abstract water effects |
 | [traffic_world.py](traffic_world.py) | Kinematic simulation traffic actors |
 
-The source is a simulation snapshot. Runtime installers, local environment configuration, dashboard application assets, raw flight/event logs, scenario-audit recordings, binaries and personal paths are excluded. There is no credential-bearing configuration in this folder. Omitted files remain local; this publication does not create a private GitHub repository.
+The source is a simulation snapshot. Runtime installers, local environment configuration, dashboard application assets, raw flight/event logs, scenario-audit recordings, binaries and personal paths are excluded. There is no credential-bearing configuration in this folder. Original Python sources, development helpers and historical snapshots are preserved in a separate owner-only private repository; credentials and raw runtime data remain excluded.
 
 ## Kalman filtering
 
@@ -56,7 +56,7 @@ python -m unittest discover -s . -p 'test_*.py'
 
 If the Gazebo bindings are installed outside the active interpreter's import path, point `AERIS_GZ_PYTHONPATH` at that installation's compatible site-packages directory. The Python ABI and native Gazebo libraries must match; pip requirements alone do not install Gazebo or PX4.
 
-**Verification of this published copy: 47 tests passed in the configured project environment.** These cover trajectory bounds, obstacle routing, stale-data behavior, coverage retention, camera-based mission transitions, Kalman noise response and temporal-window edge cases. They are not physical-flight certification. The earlier v0.7 mission benchmark in the main README predates the Kalman/window update; its performance improvements are not attributed to these filters.
+**Verification of this published copy: 53 tests passed in the configured project environment.** These cover trajectory bounds, obstacle routing, stale-data behavior, coverage retention, camera-based mission transitions, Kalman noise response and temporal-window edge cases. They are not physical-flight certification. The earlier v0.7 mission benchmark in the main README predates the Kalman/window update; its performance improvements are not attributed to these filters.
 
 ## Synthetic filtering experiment
 
@@ -71,3 +71,18 @@ This writes `validation/tracking-filter-comparison.json`. The bundled [result](t
 Running the mission bridge additionally requires a matching Gazebo world and vehicle model with `/aeris/camera`, `/aeris/front`, `/aeris/lidar`, `/world/aeris/clock` and pose/effect services, plus a running PX4 SITL endpoint. The complete platform setup and dashboard assets are not included in this folder. The source supports algorithm inspection and integration into a compatible simulation; it is not presented as a one-command reproduction of the complete local application.
 
 Copyright and publication scope are described in [the repository notice](../NOTICE.md).
+
+## Complete current Python module set
+
+All 24 current application Python files are now included in this folder. Additional modules are listed below. The original 47 algorithm tests and six antenna tests passed in the configured project environment (53 total). Historical development and local preparation scripts are retained in an owner-only private source archive.
+
+| File | Purpose / required inputs |
+| --- | --- |
+| `panel_server.py` | Loopback-only HTTP backend for the ground control station; requires the separate `panel/` browser assets. |
+| `record_telemetry.py` | Records local PX4 SITL MAVLink messages into `validation/`. |
+| `analyze_flight.py` | Plots an existing `validation/gazebo-flight.ulg` recording with pyulog. |
+| `stop_simulation.py` | Refuses shutdown when armed; uses the original local runtime layout to identify the PX4 process. Review that layout before use. |
+| `antenna_study.py` | Original three-environment replay study used by the local panel; requires the private `validation/full-survey-v07.json` input and output directories. It is separate from the newer four-terrain standalone study in `../antenna-analysis/`. |
+| `test_antenna_study.py` | Six deterministic checks for the original antenna model. |
+
+Source completeness does not imply a complete runnable distribution: world/model assets, installation scripts, dashboard frontend and raw input records are still external prerequisites. Keep the panel bound to localhost; no remote-control authentication layer is provided.
