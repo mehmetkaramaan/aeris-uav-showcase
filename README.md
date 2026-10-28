@@ -4,13 +4,23 @@
 
 Developed by **Mehmet Karaman** as an independent control, computer-vision and autonomous-systems project.
 
-> **Selective source publication:** this repository documents the full simulation project and publishes a small set of independent code samples. The integrated mission, perception, flight-command and avoidance implementations are retained privately and are not included. This is a portfolio showcase, not a complete flight-software release.
+> **Selective source publication:** this repository documents the full simulation project and publishes its core simulation algorithms and independent analysis examples. The core simulation algorithms, Kalman/windowing implementation and PX4/Gazebo bridge are now published in [flight-algorithms](flight-algorithms). Platform-specific runtime configuration, dashboard assets, binaries and raw records remain local. This is not a turnkey release of the complete application.
 
 [Watch the mission recording](aeris-mission.mp4) · [Recorded benchmark results](benchmark-results.json) · [Public code samples](#public-code-samples)
 
 [![AERIS mission recording](gcs-03-mission-complete.png)](aeris-mission.mp4)
 
 *Actual Gazebo-rendered footage of a PX4 SITL flight. The video contains four edited 10-second excerpts; the elapsed telemetry time is shown in the frame. It is not a continuous full-mission recording. The external chase camera is for presentation only and supplies no information to the autonomous mission.*
+
+## Published flight algorithms and filtering
+
+[Browse the algorithm source and tests](flight-algorithms) · [Terrain-aware antenna study](antenna-analysis)
+
+The public algorithm snapshot includes constant-velocity **Kalman tracking**, **3-of-5 temporal detection windowing**, LiDAR motion prediction, local avoidance, trajectory shaping, A* routing, camera coverage, set-cover/2-opt planning, the search/refill/suppression mission state machine, classical perception and the direct MAVLink/PX4 SITL bridge. It also includes the separate Gazebo world-effects and traffic scripts. **MAVROS is not used.**
+
+The published copy passed **47 tests** in the configured project environment. A separate synthetic Kalman experiment reduced position RMSE from 0.404 m to 0.162 m; this is not a flight-performance result. The recorded v0.7 mission benchmark below predates the filtering update.
+
+The English [antenna analysis](antenna-analysis) compares seven antenna arrangements in four terrain profiles with frozen station layouts and independent test samples. Executed notebook outputs, Python code, charts and machine-readable findings are included.
 
 ## The mission
 
@@ -99,7 +109,7 @@ The table reports **one controlled v0.7 benchmark run** against the earlier succ
 
 In this run, distance decreased by **40.4%** and duration by **36.4%**. Coverage never decreased during the mission. Six viewpoint visits were skipped after their cells had already been observed. Post-flight world auditing confirmed that both simulated fires were suppressed; those hidden locations were not supplied to the mission controller.
 
-The full project passed **41 automated regression tests** at this version. The **six public sample tests** in this repository are a separate, smaller suite and do not reproduce validation of the private integrated controller.
+The full project passed **41 automated regression tests** at this version. The **six public sample tests** in this repository are a separate, smaller suite and do not reproduce validation of the full integrated simulation.
 
 The bundled [sanitised telemetry sample](sample-telemetry.csv) contains local relative positions and selected signals at approximately 1 Hz. It excludes absolute GPS coordinates, private paths and event internals. Its sampled path-length approximation is expected to differ slightly from the full-rate flight logger.
 
@@ -139,8 +149,4 @@ The grid demo is deliberately simpler than the full visibility-graph planner. It
 
 ## Source availability
 
-Only the listed public samples, sanitised measurements and presentation assets are published. The integrated mission state machine, perception pipeline, local avoidance, flight-control bridge, scenario implementation and complete GCS source remain private. The full working project is retained locally; no private repository or full source download is exposed by this showcase.
-
-See [publication notice](NOTICE.md). Public visibility is not an open-source licence.
-
-**Mehmet Karaman** · Artificial Intelligence, Control Systems and Autonomous Robotics
+Published source now includes the [core flight algorithms and tests](flight-algorithms), the [standalone antenna analysis](antenna-analysis), the original educational samples and selected presentation assets. Local platform configuration, dashboard application assets, binaries, raw logs, scenario audits and personal paths remain unpublished. The complete local application and installation are not provided as a turnkey package. See the [publication notice](NOTICE.md). Public visibility is not an open-source licence.

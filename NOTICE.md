@@ -2,6 +2,10 @@
 
 Copyright (c) 2026 Mehmet Karaman.
 
-This repository is a selective portfolio showcase. The full AERIS implementation is not published here. No open-source license is granted for the original code or media in this repository. Public visibility does not itself grant redistribution or reuse rights. Third-party software names identify the tools used; their respective licenses and ownership remain unchanged.
+This repository publishes an AERIS simulation showcase, selected presentation assets, the core flight/planning/perception algorithms, Kalman and temporal-windowing implementations, direct MAVLink/PX4 and Gazebo bridge source, tests, and a standalone antenna comparison.
 
-The public examples are independent educational extracts. They do not contain the integrated flight controller interface, mission state machine, perception pipeline or avoidance implementation.
+Platform-specific runtime configuration, dashboard application assets, binaries, raw flight/event logs, scenario audits, credentials and personal paths are not published. Omitted files are retained locally; this repository does not expose a private repository or a complete application installation.
+
+No open-source license is granted for original code or media in this repository. Public visibility does not itself grant redistribution or reuse rights. Third-party software retains its respective ownership and licensing.
+
+All flight behavior and antenna results described here concern simulation or explicitly identified synthetic experiments. No physical UAV flight, field RF validation or safety certification is claimed.
