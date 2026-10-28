@@ -1,0 +1,58 @@
+[
+  {
+    "terrain": "Small training field",
+    "profile": "local",
+    "antenna": "Compact omnidirectional",
+    "antenna_id": "compact",
+    "station": "south",
+    "mast_m": 2.0,
+    "selection_pass_rate": 1.0,
+    "independent_pass_rate": 1.0,
+    "mean_reserve_coverage": 100.0,
+    "worst_reserve_coverage": 100.0,
+    "worst_p05_margin_db": 28.40749366583478,
+    "interpretation": "Simplest configuration meeting the selection criterion"
+  },
+  {
+    "terrain": "Large open terrain",
+    "profile": "open",
+    "antenna": "Tracking directional panel",
+    "antenna_id": "tracker",
+    "station": "west",
+    "mast_m": 8.0,
+    "selection_pass_rate": 0.55,
+    "independent_pass_rate": 0.6,
+    "mean_reserve_coverage": 98.25,
+    "worst_reserve_coverage": 86.1111111111111,
+    "worst_p05_margin_db": 7.943720328981508,
+    "interpretation": "Strongest relative performer; not a universal suitability claim"
+  },
+  {
+    "terrain": "Vegetated terrain",
+    "profile": "forest",
+    "antenna": "Tracking directional panel",
+    "antenna_id": "tracker",
+    "station": "south",
+    "mast_m": 8.0,
+    "selection_pass_rate": 0.6,
+    "independent_pass_rate": 0.55,
+    "mean_reserve_coverage": 98.63888888888889,
+    "worst_reserve_coverage": 89.44444444444446,
+    "worst_p05_margin_db": 8.757105342572784,
+    "interpretation": "Strongest relative performer; not a universal suitability claim"
+  },
+  {
+    "terrain": "Built-up terrain",
+    "profile": "urban",
+    "antenna": "Tracking directional panel",
+    "antenna_id": "tracker",
+    "station": "south",
+    "mast_m": 8.0,
+    "selection_pass_rate": 0.85,
+    "independent_pass_rate": 0.85,
+    "mean_reserve_coverage": 99.61111111111111,
+    "worst_reserve_coverage": 96.1111111111111,
+    "worst_p05_margin_db": 10.620070391172009,
+    "interpretation": "Strongest relative performer; not a universal suitability claim"
+  }
+]
