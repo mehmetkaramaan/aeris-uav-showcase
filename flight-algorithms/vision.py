@@ -15,6 +15,7 @@ from gz.msgs10.laserscan_pb2 import LaserScan
 from gz.msgs10.stringmsg_pb2 import StringMsg
 from avoidance import Avoidance
 from perception import landmarks
+from yolo_detection import YoloBridge, project_detections
 import json
 
 class Vision:
@@ -22,6 +23,7 @@ class Vision:
     def __init__(self, telemetry):
         self.clock_time = 0.0
         self.clock_last = 0.0
+        self.yolo = YoloBridge()
         self.safety = Avoidance()
         self.front = None
         self.front_last = 0
@@ -78,7 +80,9 @@ class Vision:
     def front_callback(self, msg):
         try:
             frame = cv2.cvtColor(np.frombuffer(msg.data, dtype=np.uint8).reshape(msg.height, msg.step or msg.width * 3)[:, :msg.width * 3].reshape(msg.height, msg.width, 3), cv2.COLOR_RGB2BGR)
-            self.front_landmarks = landmarks(frame, self.telemetry(), self.project, front=True)
+            st = self.telemetry()
+            self.yolo.submit('front', frame, st)
+            self.front_landmarks = landmarks(frame, st, self.project, front=True)
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
             h, s, v = cv2.split(hsv)
             mask = ((h > 90) & (h < 165) & (s > 120) & (v > 50) | (h > 20) & (h < 38) & (s > 120) & (v > 80)).astype('uint8') * 255
@@ -91,6 +95,7 @@ class Vision:
                 boxes.append([x, y, w, hh])
                 cv2.rectangle(frame, (x, y), (x + w, y + hh), (255, 230, 40), 2)
                 cv2.putText(frame, 'Trafik adayi', (x, max(16, y - 4)), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (255, 230, 40), 1)
+            self.draw_yolo(frame, 'front')
             _, jpg = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 80])
             self.front = jpg.tobytes()
             self.front_last = time.monotonic()
@@ -129,7 +134,9 @@ class Vision:
             elif self.filter == 'sharpen':
                 frame = cv2.addWeighted(frame, 1.8, cv2.GaussianBlur(frame, (5, 5), 1), -0.8, 0)
             st = self.telemetry()
+            self.yolo.submit('down', frame, st)
             dets = landmarks(frame, st, self.project)
+            self.draw_yolo(frame, 'down')
             line = None
             cv2.drawMarker(frame, (320, 240), (220, 220, 220), cv2.MARKER_CROSS, 16, 1)
             ok, jpg = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 82])
@@ -144,9 +151,31 @@ class Vision:
         except Exception as e:
             print('Camera frame error:', e, flush=True)
 
+    def draw_yolo(self, frame, channel):
+        result = self.yolo.snapshot(channel)
+        if result is None:
+            return
+        for box in result.get('detections', []):
+            coords = box.get('xyxy', [])
+            if len(coords) != 4 or not all((math.isfinite(float(v)) for v in coords)):
+                continue
+            x1, y1, x2, y2 = map(int, coords)
+            cv2.rectangle(frame, (x1, y1), (x2, y2), (180, 220, 160), 1)
+            text = f"YOLO shadow {box['class']} {box['confidence']:.2f}"
+            cv2.putText(frame, text, (max(0, x1), max(14, y1 - 14)), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (180, 220, 160), 1)
+
+    def yolo_state(self):
+        status = self.yolo.state()
+        status['channels'] = {}
+        for channel in ['front', 'down']:
+            result = self.yolo.snapshot(channel)
+            if result:
+                status['channels'][channel] = {'age': round(time.monotonic() - result['captured'], 3), 'inference_ms': result['inference_ms'], 'detections': project_detections(result.get('detections', []), result['shape'], result['telemetry'], self.project, front=channel == 'front')}
+        return status
+
     def state(self):
         with self.lock:
-            return {'sim_time': self.clock_time, 'sim_age': time.monotonic() - self.clock_last if self.clock_last else None, 'age': round(time.monotonic() - self.last, 2) if self.last else None, 'frames': self.count, 'line': self.line, 'detections': list(self.detections), 'filter': self.filter, 'noise': self.noise, 'front_age': round(time.monotonic() - self.front_last, 2) if self.front_last else None, 'front_candidates': len(self.front_boxes), 'front_landmarks': list(self.front_landmarks)}
+            return {'yolo': self.yolo_state(), 'sim_time': self.clock_time, 'sim_age': time.monotonic() - self.clock_last if self.clock_last else None, 'age': round(time.monotonic() - self.last, 2) if self.last else None, 'frames': self.count, 'line': self.line, 'detections': list(self.detections), 'filter': self.filter, 'noise': self.noise, 'front_age': round(time.monotonic() - self.front_last, 2) if self.front_last else None, 'front_candidates': len(self.front_boxes), 'front_landmarks': list(self.front_landmarks)}
 
     def move_model(self, name, x, y, z):
         p = Pose()

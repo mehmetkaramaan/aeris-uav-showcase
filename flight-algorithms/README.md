@@ -56,7 +56,7 @@ python -m unittest discover -s . -p 'test_*.py'
 
 If the Gazebo bindings are installed outside the active interpreter's import path, point `AERIS_GZ_PYTHONPATH` at that installation's compatible site-packages directory. The Python ABI and native Gazebo libraries must match; pip requirements alone do not install Gazebo or PX4.
 
-**Verification of this published copy: 53 tests passed in the configured project environment.** These cover trajectory bounds, obstacle routing, stale-data behavior, coverage retention, camera-based mission transitions, Kalman noise response and temporal-window edge cases. They are not physical-flight certification. The earlier v0.7 mission benchmark in the main README predates the Kalman/window update; its performance improvements are not attributed to these filters.
+**Verification of this published copy: 59 tests passed in the configured project environment.** These cover trajectory bounds, obstacle routing, stale-data behavior, coverage retention, camera-based mission transitions, Kalman noise response and temporal-window edge cases. They are not physical-flight certification. The earlier v0.7 mission benchmark in the main README predates the Kalman/window update; its performance improvements are not attributed to these filters.
 
 ## Synthetic filtering experiment
 
@@ -74,7 +74,7 @@ Copyright and publication scope are described in [the repository notice](../NOTI
 
 ## Complete current Python module set
 
-All 24 current application Python files are now included in this folder. Additional modules are listed below. The original 47 algorithm tests and six antenna tests passed in the configured project environment (53 total). Historical development and local preparation scripts are retained in an owner-only private source archive.
+All 27 current application Python files are now included in this folder. Additional modules are listed below. The original 47 algorithm tests and six antenna tests passed in the configured project environment (53 total). Historical development and local preparation scripts are retained in an owner-only private source archive.
 
 | File | Purpose / required inputs |
 | --- | --- |
@@ -86,3 +86,7 @@ All 24 current application Python files are now included in this folder. Additio
 | `test_antenna_study.py` | Six deterministic checks for the original antenna model. |
 
 Source completeness does not imply a complete runnable distribution: world/model assets, installation scripts, dashboard frontend and raw input records are still external prerequisites. Keep the panel bound to localhost; no remote-control authentication layer is provided.
+
+## YOLO marker perception pilot
+
+[Implementation, measured comparison and operating scope](YOLO.md). YOLOv8n now runs in a separate optional process alongside the classical camera pipeline. It is a trained two-class simulation-marker detector in **shadow mode**; it supplies overlays and confidence/latency telemetry, not flight commands. See the model/data limitations before interpreting the synthetic results. The updated local Python regression suite passed 59 tests; the YOLO process and camera callback were also exercised with injected RGB test images.

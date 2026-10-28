@@ -1,0 +1,16 @@
+{
+  "scope": "Procedural marker held-out images only; not Gazebo mission or real-fire validation",
+  "metrics": {
+    "metrics/precision(B)": 0.9981144252706498,
+    "metrics/recall(B)": 1.0,
+    "metrics/mAP50(B)": 0.995,
+    "metrics/mAP50-95(B)": 0.9325091886467701,
+    "fitness": 0.9325091886467701
+  },
+  "speed_ms": {
+    "preprocess": 0.13969616459993026,
+    "inference": 40.13117883247711,
+    "loss": 3.7313535964737334e-05,
+    "postprocess": 0.2888602466555312
+  }
+}
