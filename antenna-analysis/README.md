@@ -74,4 +74,4 @@ Internal checks cover disjoint selection/test seeds, experiment counts, finite o
 
 [ITU-R P.525](https://www.itu.int/rec/R-REC-P.525-5-202411-I/en) supports the free-space attenuation expression. [ArduPilot antenna tracking](https://ardupilot.org/copter/docs/common-antenna-tracking.html) describes the directional tracking concept. [This Taoglas collinear datasheet](https://www.taoglas.com/datasheets/OMB.868.B10F21.pdf) illustrates a real antenna family; its measured pattern is not used in these calculations.
 
-Only this standalone analysis, sanitized simulation geometry and figures are published. The integrated UAV mission, perception, avoidance and flight-command source remains private. This analysis cannot command a vehicle.
+Only this standalone analysis, sanitized simulation geometry and figures are published. The core simulation source is available in [flight-algorithms](../flight-algorithms); local runtime configuration, raw records and application assets remain unpublished. This analysis cannot command a vehicle.
