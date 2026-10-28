@@ -36,13 +36,13 @@ The local suite passed **59 tests**. A separate integration check injected RGB i
 
 The UAV begins with an empty water tank and no knowledge of the station location, fire locations or fire count. It must:
 
-1. Take off and search for the water station using camera observations.
-2. Record the visually estimated station position and perform a controlled refill approach.
-3. Search for fires, approach a confirmed target and apply the simulated water payload while hovering.
-4. Verify suppression from sustained absence of the flame marker in fresh camera images.
-5. Return to the remembered station when water is insufficient, then resume the mission.
-6. Preserve coverage already obtained by the camera and inspect only remaining unobserved areas.
-7. Return to the recorded launch location only after full defined-area coverage and no known active fire, then land.
+Take off and search for the water station using camera observations. Record the visually estimated station position and perform a controlled refill approach.
+
+Search for fires, approach a confirmed target and apply the simulated water payload while hovering. Verify suppression from sustained absence of the flame marker in fresh camera images.
+
+Return to the remembered station when water is insufficient, then resume the mission. Preserve coverage already obtained by the camera and inspect only remaining unobserved areas.
+
+Return to the recorded launch location only after full defined-area coverage and no known active fire, then land.
 
 Static structures constrain the route. Moving aerial actors create sensor-visible traffic around the search area. The vehicle responds to LiDAR measurements rather than receiving actor coordinates from the world service.
 
@@ -149,13 +149,13 @@ The grid demo is deliberately simpler than the full visibility-graph planner. It
 
 ## Scope and limitations
 
-- This is a **simulation-based engineering project**. No physical UAV flight is claimed.
-- Fire detection uses controlled visual markers, not a trained real-world fire detector.
-- Water refill and suppression are abstract simulation effects, not fluid, pump or thermal physics.
-- Moving traffic consists of kinematic Gazebo actors, not a fleet of independent PX4 aircraft.
-- Coverage applies to the defined navigable ground cells outside building safety footprints; it is not proof of visibility of every surface or real-world fire.
-- The scene does not spontaneously ignite new fires. A persistent deployment would require observation-age policies and periodic rescanning.
-- A single successful run and this comparison do not establish a general reliability or safety certification.
+This is a **simulation-based engineering project**. No physical UAV flight is claimed. Fire detection uses controlled visual markers, not a trained real-world fire detector.
+
+Water refill and suppression are abstract simulation effects, not fluid, pump or thermal physics. Moving traffic consists of kinematic Gazebo actors, not a fleet of independent PX4 aircraft.
+
+Coverage applies to the defined navigable ground cells outside building safety footprints; it is not proof of visibility of every surface or real-world fire. The scene does not spontaneously ignite new fires. A persistent deployment would require observation-age policies and periodic rescanning.
+
+A single successful run and this comparison do not establish a general reliability or safety certification.
 
 ## Source availability
 
