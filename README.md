@@ -18,9 +18,19 @@ Developed by **Mehmet Karaman** as an independent control, computer-vision and a
 
 The public algorithm snapshot includes constant-velocity **Kalman tracking**, **3-of-5 temporal detection windowing**, LiDAR motion prediction, local avoidance, trajectory shaping, A* routing, camera coverage, set-cover/2-opt planning, the search/refill/suppression mission state machine, classical perception and the direct MAVLink/PX4 SITL bridge. It also includes the separate Gazebo world-effects and traffic scripts. **MAVROS is not used.**
 
-The published copy passed **47 tests** in the configured project environment. A separate synthetic Kalman experiment reduced position RMSE from 0.404 m to 0.162 m; this is not a flight-performance result. The recorded v0.7 mission benchmark below predates the filtering update.
+The published copy passed **59 tests** in the configured project environment. A separate synthetic Kalman experiment reduced position RMSE from 0.404 m to 0.162 m; this is not a flight-performance result. The recorded v0.7 mission benchmark below predates the filtering update.
 
 The English [antenna analysis](antenna-analysis) compares seven antenna arrangements in four terrain profiles with frozen station layouts and independent test samples. Executed notebook outputs, Python code, charts and machine-readable findings are included.
+
+## Neural perception extension: YOLOv8n
+
+A two-class YOLOv8n marker detector runs alongside the original OpenCV camera pipeline. It detects **fire markers** and **water-station markers**, reports confidence and bounding boxes, and projects fresh observations using capture-time vehicle attitude/position. A separate process and latest-frame queue keep inference off the camera callbacks; expired observations are discarded. The existing LiDAR Kalman tracker continues to estimate obstacle motion independently.
+
+**Why add it?** The original detector depends on hand-written color/shape rules. This pilot adds a trainable detection interface and measured neural-versus-classical comparison, providing a path to training on a larger, labelled camera dataset. It has not demonstrated real-fire generalization or better flight performance.
+
+On 48 independently generated procedural marker images (71 objects, IoU >=0.5), the original detector matched 68 objects with one false positive; YOLO matched 71 with zero false positives at confidence >=0.45. Median local call times were approximately 0.31 ms and 12.30 ms respectively. These are narrow synthetic-image results, not Gazebo mission or real-camera results. The system remains in **shadow mode**: YOLO overlays/telemetry are visible, while established camera detections continue to control mission decisions.
+
+The local suite passed **59 tests**. A separate integration check injected RGB images through the Gazebo Image callback and verified fresh YOLO output, metric projection and preserved classical detections; no new autonomous flight was claimed. [Read the implementation, training procedure and limitations](flight-algorithms/YOLO.md).
 
 ## The mission
 
