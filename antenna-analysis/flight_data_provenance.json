@@ -1,0 +1,23 @@
+{
+  "source": "Completed AERIS v0.7 Gazebo/PX4 SITL mission",
+  "original_recording": "full-survey-v07.json",
+  "original_recorder": "validate_survey_v07.py",
+  "original_recording_sha256": "e3684ab05855b5f4111b2295f46e6633180f08493f78d3326b719f9855c74796",
+  "raw_export_rows": 565,
+  "altitude_filter": "height > 1.5 m",
+  "analysis_rows": 551,
+  "rounding_decimals": 6,
+  "columns_and_units": {
+    "t": "elapsed seconds",
+    "east": "local metres",
+    "north": "local metres",
+    "height": "relative height metres",
+    "roll": "radians",
+    "pitch": "radians"
+  },
+  "raw_csv_sha256": "ad7faa54c677a80b0f30be6ecb28d79310c65801874ac038c3f8df97aa437c62",
+  "analysis_csv_sha256": "4e2217618b31a419e5095c087782bb7ed719a1d8504663a92aa2be63dbe9d3ac",
+  "numerical_check": "All 551 x 6 prepared values exactly match the previous embedded data",
+  "privacy": "Only six explicitly selected local geometry fields are exported; no absolute GPS coordinates",
+  "recording_note": "The original recorder sampled the ground-station API approximately once per second. The new read-only recorder is a separate reusable acquisition utility."
+}

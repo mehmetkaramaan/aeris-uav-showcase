@@ -1,6 +1,6 @@
 # Terrain-Aware Antenna Comparison
 
-A self-contained antenna-family comparison for the AERIS autonomous firefighting UAV project.
+An antenna-family comparison for the AERIS autonomous firefighting UAV project.
 
 [Open the executed notebook](antenna-terrain-study.ipynb) · [Python analysis](antenna-terrain-study.py) · [Detailed results](terrain_comparison.csv)
 
@@ -54,7 +54,7 @@ pip install -r requirements.txt
 python antenna-terrain-study.py
 ```
 
-Alternatively, run all cells in the notebook on Kaggle or Jupyter. No external dataset download or GPU is required. Generated files are written to `antenna_results/` locally, or `/kaggle/working/antenna_results/` on Kaggle. The notebook already includes recorded outputs for inspection on GitHub. All analysis code comments have been removed; method explanations are provided here and in English notebook sections.
+Alternatively, run all cells in the notebook on Kaggle or Jupyter. A readable CSV is bundled; no GPU is required. The notebook downloads that CSV only when it is absent locally. Generated files are written to `antenna_results/` locally, or `/kaggle/working/antenna_results/` on Kaggle. The notebook already includes recorded outputs for inspection on GitHub. All analysis code comments have been removed; method explanations are provided here and in English notebook sections.
 
 Internal checks cover disjoint selection/test seeds, experiment counts, finite outputs, reference free-space attenuation and exact response to a controlled additional path loss. These checks establish implementation consistency, not field validation.
 
@@ -62,7 +62,7 @@ Internal checks cover disjoint selection/test seeds, experiment counts, finite o
 
 | File | Purpose |
 | --- | --- |
-| `antenna-terrain-study.ipynb` | Executed, self-contained English notebook |
+| `antenna-terrain-study.ipynb` | Executed, English notebook with explicit CSV preparation |
 | `antenna-terrain-study.py` | Same reproducible calculations as a Python script |
 | `terrain_comparison.csv` | All seven arrangements in all four terrain profiles |
 | `terrain_findings.json` | Machine-readable terrain findings for a future interface |
@@ -74,3 +74,21 @@ Internal checks cover disjoint selection/test seeds, experiment counts, finite o
 [ITU-R P.525](https://www.itu.int/rec/R-REC-P.525-5-202411-I/en) supports the free-space attenuation expression. [ArduPilot antenna tracking](https://ardupilot.org/copter/docs/common-antenna-tracking.html) describes the directional tracking concept. [This Taoglas collinear datasheet](https://www.taoglas.com/datasheets/OMB.868.B10F21.pdf) illustrates a real antenna family; its measured pattern is not used in these calculations.
 
 Only this standalone analysis, sanitized simulation geometry and figures are published. The core simulation source is available in [flight-algorithms](../flight-algorithms); local runtime configuration, raw records and application assets remain unpublished. This analysis cannot command a vehicle.
+
+## Flight recording and data preparation
+
+The original AERIS v0.7 mission recorder sampled `/api/state` from the local Gazebo/PX4 ground station about once per second into `full-survey-v07.json`. The six geometry fields are now stored as plain CSV instead of compressed text inside source code.
+
+`flight_geometry_raw.csv` contains 565 rows before altitude filtering. `flight_geometry.csv` contains the 551 rows above 1.5 m, rounded to six decimals. The recorded values and model results are unchanged. The notebook shows loading, numeric checks, timestamp checks, filtering and output generation explicitly.
+
+`export_flight_geometry.py` extracts these six fields from an owner-local recording. It does not copy absolute GPS coordinates or other telemetry. `record_flight_geometry.py` is a read-only utility for recording a new local simulation; it does not arm, launch or command a vehicle. The original flight recorder is identified in `flight_data_provenance.json`; the reusable recorder is not presented as the original acquisition script.
+
+```sh
+python export_flight_geometry.py /path/to/full-survey-v07.json --output flight_geometry_raw.csv
+python record_flight_geometry.py --seconds 600 --interval 1 --output new_flight_geometry_raw.csv
+python antenna-terrain-study.py
+```
+
+The first command requires the original private recording. The second requires a running local AERIS/PX4/Gazebo system. Kaggle runs only the offline analysis using the supplied CSV. A new flight produces different data; the independent antenna-study routes remain explicitly transformed/synthetic scenarios.
+
+Elapsed time is in seconds; local east/north/height are in metres; roll and pitch are in radians. No sampling interpolation is applied to the raw export; later route transformations are visible in the analysis code. The provenance file stores counts, preparation settings and SHA-256 hashes.
